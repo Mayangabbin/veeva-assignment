@@ -101,4 +101,9 @@ Monitoring and logs are collected and managed using Amazon CloudWatch.
 
 thresholds are tuned after observing production baselines.
 
-
+Suggestions for Future Enhancements:
+Enable multi factor authentication for cognito - TOTP / SMS MFA
+Implement lifecycle policies for RDS backups to save storage.
+Create centralized dashboards in CloudWatch for system overview.
+Add cache layer for api responses (Redis)
+Integrate Kinesis with AWS Lambda or AWS Analytics services to enable real-time analytics dashboards.

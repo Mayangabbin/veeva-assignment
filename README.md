@@ -74,6 +74,7 @@ Alerts are configured in CloudWatch.
 - Cache hit/miss ratio. warning alert at cache hit ratio < 70%
 - Latency. Warning alert at p95 > 200ms, Critical alert at p95 > 500ms.
 - Error rates. warning alert at 5xx > 1%, Critical alert at 5xx > 5%.
+
 | Metric           | Warning Threshold | Critical Threshold |
 | ---------------- | ----------------- | ------------------ |
 | Cache hit ratio  | < 70%             | < 50%              |

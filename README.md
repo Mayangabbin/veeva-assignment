@@ -40,11 +40,10 @@ Alerts are configured in CloudWatch.
 
 *EKS Pods & Nodes:*
 - CPU utilization. Warning alert at 70% for 5 min, Critical alert at 85% for 5 min.
-- CPU utilization. Warning alert at 70%, Critical alert at 80%.
-- Memory utilization. 
+- Memory utilization. Warning alert at 70%, Critical alert at 80%.
 - Disk I/O.
 - Network I/O.
-- Pod restarts. warning alert at 3 Pod restarts in 10 mins.
+- Pod restarts. warning alert at 3 Pod restarts in 10 mins evaluation period.
 - failed scheduling. warning alert at FailedSchedueling events > 0 for 5 mins. 
 
 *API :*
@@ -62,19 +61,25 @@ Alerts are configured in CloudWatch.
 - Memory utilization. warning alert at Freeable memory < 1GB for 10 mins, Critical alert at freeable memory < 500MB for 10 mins.
 - Disk usage. Warning alert at 20% free storage, Critical alert at 10% free storage.
 - Connections count. Warning alert at 80% of max connections, Critical alert at 90%. 
-- Read/Write latency. Warning alert at latency > 100ms for 5 mins, Critical alert at latency > 300ms for 5mins.
-- Replication lag. Warning alert at ReplicaLag > 30–60s for 5 mins, Warning alert at ReplicaLag > 5mins for 5-10 mins
+- Read/Write latency. Warning alert at p95 > 100ms for 5 mins, Critical alert at p95 > 300ms for 5mins.
+- Replication lag. Warning alert at ReplicaLag > 30–60s for 5 mins, Critical alert at ReplicaLag > 5mins for 5-10 mins
 
 *ALB:*
-- Request count
+- Request count.
 - Latency. Warning alert at p95 > 500ms, Critical alert at p95 > 2s.
-- Error rates. warning alert at 5xx > 1%, Critical at 5xx > 5%.
+- Error rates. warning alert at 5xx > 1%, Critical alert at 5xx > 5%.
 - Unhealthy targets. Critical Alert at Unhealthy targets > 0.
 
 *CloudFront:*
-- Cache hit/miss ratio
-- Latency
-- Error rates
+- Cache hit/miss ratio. warning alert at cache hit ratio < 70%
+- Latency. Warning alert at p95 > 200ms, Critical alert at p95 > 500ms.
+- Error rates. warning alert at 5xx > 1%, Critical alert at 5xx > 5%.
+| Metric           | Warning Threshold | Critical Threshold |
+| ---------------- | ----------------- | ------------------ |
+| Cache hit ratio  | < 70%             | < 50%              |
+| Latency (p95)    | > 200ms           | > 500ms            |
+| Error rate (5xx) | > 1%              | > 5%               |
+
 
 thresholds are tuned after observing production baselines.
 

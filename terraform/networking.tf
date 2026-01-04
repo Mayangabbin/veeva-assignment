@@ -1,4 +1,25 @@
-# Create a VPC
+locals {
+  
+  # Get availiable AZ's
+  azs = data.aws_availability_zones.available.names
+
+  public_subnets = {
+    "${local.azs[0]}" = "10.0.1.0/24"
+    "${local.azs[1]}" = "10.0.2.0/24"
+  }
+
+    private_app = {
+      "${local.azs[0]}" = "10.0.10.0/24"
+      "${local.azs[1]}" = "10.0.11.0/24"
+    }
+
+    private_db = {
+      "${local.azs[0]}" = "10.0.20.0/24"
+      "${local.azs[1]}" = "10.0.21.0/24"
+  }
+}
+
+# VPC
 resource "aws_vpc" "main" {
   cidr_block = "10.0.0.0/16"
   enable_dns_hostnames = true
@@ -9,7 +30,7 @@ resource "aws_vpc" "main" {
   }
 }
 
-# Create an Internet Gateway
+# Internet Gateway
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
@@ -18,31 +39,17 @@ resource "aws_internet_gateway" "main" {
   }
 }
 
-# Define Availability Zones
-data "aws_availability_zones" "available" {
-  state = "available"
-}
+# Public subnets
+resource "aws_subnet" "public" {
+  for_each = local.public_subnets
 
-# Public Subnets
-resource "aws_subnet" "public_1" {
-  vpc_id = aws_vpc.main.id
-  cidr_block = "10.0.1.0/24"
-  availability_zone = data.aws_availability_zones.available.names[0]
-  map_public_ip_on_launch = true 
-
-  tags = {
-    Name = "public-subnet-1"
-  }
-}
-
-resource "aws_subnet" "public_2" {
-  vpc_id = aws_vpc.main.id
-  cidr_block = "10.0.2.0/24"
-  availability_zone = data.aws_availability_zones.available.names[1]
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = each.value
+  availability_zone       = each.key
   map_public_ip_on_launch = true
 
   tags = {
-    Name = "public-subnet-2"
+    Name = "public-subnet-${each.key}"
   }
 }
 
@@ -56,109 +63,109 @@ resource "aws_route_table" "public" {
   }
 
   tags = {
-    Name = public-route-table"
+    Name = "public-route-table"
   }
 }
 
-# Associate Public Subnet 1 with Public Route Table
-resource "aws_route_table_association" "public_1_association" {
-  subnet_id = aws_subnet.public_1.id
+# Associate Public Subnets with Public Route Table
+resource "aws_route_table_association" "public_assoc" {
+  for_each = local.public_subnets
+
+  subnet_id      = aws_subnet.public_subnets[each.key].id
   route_table_id = aws_route_table.public.id
 }
 
-# Associate Public Subnet 2 with Public Route Table
-resource "aws_route_table_association" "public_2_association" {
-  subnet_id = aws_subnet.public_2.id
-  route_table_id = aws_route_table.public.id
-}
-
-# Elastic IPs for NAT Gateways
-resource "aws_eip" "nat_1" {
+# Elastic IP for NAT Gateways
+resource "aws_eip" "nat" {
+  for_each = local.public_subnets
   vpc = true
 
   tags = {
-    Name = "nat-eip-1"
+    Name = "nat-eip-${each.key}"
   }
 }
 
-resource "aws_eip" "nat_2" {
-  vpc = true
+# NAT Gateway in public subnets
+resource "aws_nat_gateway" "nat" {
+  for_each = local.public_subnets
+
+  allocation_id = aws_eip.nat[each.key].id
+  subnet_id     = aws_subnet.public[each.key].id
 
   tags = {
-    Name = "nat-eip-2"
+    Name = "nat-gateway-${each.key}"
   }
 }
 
-# NAT Gateways in Public Subnets
-resource "aws_nat_gateway" "nat_1" {
-  allocation_id = aws_eip.nat_1.id
-  subnet_id = aws_subnet.public_1.id
+# Private app subnets
+resource "aws_subnet" "private_app" {
+  for_each = local.private_app
+
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = each.value
+  availability_zone = each.key
 
   tags = {
-    Name = "nat-gateway-1"
+    Name = "private-app-${each.key}"
+    Tier = "application"
   }
 }
 
-resource "aws_nat_gateway" "nat_2" {
-  allocation_id = aws_eip.nat_2.id
-  subnet_id = aws_subnet.public_2.id
-
-  tags = {
-    Name = "nat-gateway-2"
-  }
-}
-
-# Private Subnets
-resource "aws_subnet" "private_1" {
-  vpc_id = aws_vpc.main.id
-  cidr_block = "10.0.10.0/24"
-  availability_zone = data.aws_availability_zones.available.names[0]
-
-  tags = {
-    Name = "private-subnet-1"
-  }
-}
-
-resource "aws_subnet" "private_2" {
-  vpc_id = aws_vpc.main.id
-  cidr_block = "10.0.11.0/24"
-  availability_zone = data.aws_availability_zones.available.names[1]
-
-  tags = {
-    Name = "private-subnet-2"
-  }
-}
-
-# Route Table for Private Subnets
+# App private route tables
 resource "aws_route_table" "private" {
+  for_each = local.private_subnets
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "private-route-table"
+    Name = "private-route-table-${each.key}"
   }
 }
 
-# Route for NAT Gateway
-resource "aws_route" "private_1_nat" {
-  route_table_id = aws_route_table.private.id
+# Routes to NAT Gateways
+resource "aws_route" "private_nat" {
+  for_each = local.private_subnets
+
+  route_table_id         = aws_route_table.private[each.key].id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id = aws_nat_gateway.nat_1.id
+  nat_gateway_id         = aws_nat_gateway.nat[each.key].id
 }
 
-resource "aws_route" "private_2_nat" {
-  route_table_id = aws_route_table.private.id
-  destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id = aws_nat_gateway.nat_2.id
+# Associate app private subnets with app private route tables
+resource "aws_route_table_association" "private_app" {
+  for_each = local.private_app
+
+  subnet_id      = aws_subnet.private[each.key].id
+  route_table_id = aws_route_table.private_app[each.key].id
 }
 
-# Associate Private Subnet 1 with Private Route Table
-resource "aws_route_table_association" "private_1_association" {
-  subnet_id = aws_subnet.private_1.id
-  route_table_id = aws_route_table.private.id
+# Private DB subnets
+resource "aws_subnet" "private_db" {
+  for_each = local.private_db
+
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = each.value
+  availability_zone = each.key
+
+  tags = {
+    Name = "private-db-${each.key}"
+    Tier = "database"
+  }
 }
 
-# Associate Private Subnet 2 with Private Route Table
-resource "aws_route_table_association" "private_2_association" {
-  subnet_id = aws_subnet.private_2.id
-  route_table_id = aws_route_table.private.id
+# DB private route table
+resource "aws_route_table" "private_db" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "private-db-route-table"
+  }
 }
+
+resource "aws_route_table_association" "private_db" {
+  for_each = local.private_db
+
+  subnet_id      = aws_subnet.private_db[each.key].id
+  route_table_id = aws_route_table.private_db.id
+}
+
+

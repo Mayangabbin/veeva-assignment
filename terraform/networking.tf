@@ -1,7 +1,7 @@
 locals {
   
-  # Get availiable AZ's
-  azs = data.aws_availability_zones.available.names
+  # Get AZ's in alphabetical order to avoid changes
+  azs = azs = slice(sort(data.aws_availability_zones.available.names), 0, 2)
 
   public_subnets = {
     "${local.azs[0]}" = "10.0.1.0/24"
@@ -71,7 +71,7 @@ resource "aws_route_table" "public" {
 resource "aws_route_table_association" "public_assoc" {
   for_each = local.public_subnets
 
-  subnet_id      = aws_subnet.public_subnets[each.key].id
+  subnet_id      = aws_subnet.public[each.key].id
   route_table_id = aws_route_table.public.id
 }
 
@@ -112,8 +112,8 @@ resource "aws_subnet" "private_app" {
 }
 
 # App private route tables
-resource "aws_route_table" "private" {
-  for_each = local.private_subnets
+resource "aws_route_table" "private_app" {
+  for_each = local.private_app
   vpc_id = aws_vpc.main.id
 
   tags = {
@@ -123,9 +123,9 @@ resource "aws_route_table" "private" {
 
 # Routes to NAT Gateways
 resource "aws_route" "private_nat" {
-  for_each = local.private_subnets
+  for_each = local.private_app
 
-  route_table_id         = aws_route_table.private[each.key].id
+  route_table_id         = aws_route_table.private_app[each.key].id
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = aws_nat_gateway.nat[each.key].id
 }
@@ -134,7 +134,7 @@ resource "aws_route" "private_nat" {
 resource "aws_route_table_association" "private_app" {
   for_each = local.private_app
 
-  subnet_id      = aws_subnet.private[each.key].id
+  subnet_id      = aws_subnet.private_app[each.key].id
   route_table_id = aws_route_table.private_app[each.key].id
 }
 

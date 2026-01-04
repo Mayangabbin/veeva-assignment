@@ -4,9 +4,11 @@ this diagram shows the architecture of my Veeva-assignment app.
 ### Architecture Explained:
 
 **Amazon Route 53-** routes user requests to CloudFront CDN using a DNS record.
+
 **Amazon Cognito-** manages authentication and authorization and handles user sign-up, sign-in, and access control for the application.
 
 **Amazon Cloudfront-** a CDN that delivers the application’s front-end content using edge locations for low latency and high availability.
+
 **Amazon API Gateway-** manages API requests, routing them to the backend API pods and handling authentication, authorization, and rate limiting.
 
 **ALB-** an Amazon Load Balancer connected to public subnets in both AZ's for distributing traffic to front-end pods.

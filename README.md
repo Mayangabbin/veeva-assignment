@@ -4,17 +4,16 @@ this diagram shows the architecture of my Veeva-assignment app.
 ### Architecture Explained:
 
 **Amazon Route 53-** routes user requests to CloudFront CDN using a DNS record.
-Amazon Cognito – manages authentication and authorization and handles user sign-up, sign-in, and access control for the application.
-Amazon Cloudfront-  a CDN that delivers the application’s front-end content using edge locations for low latency and high availability.
-Amazon API Gateway – manages API requests, routing them to the backend API pods and handling authentication, authorization, and rate limiting.
-ALB – an Amazon Load Balancer connected to public subnets in both AZ's for distributing traffic to front-end pods.
+**Amazon Cognito-** manages authentication and authorization and handles user sign-up, sign-in, and access control for the application.
+**Amazon Cloudfront-** a CDN that delivers the application’s front-end content using edge locations for low latency and high availability.
+**Amazon API Gateway-** manages API requests, routing them to the backend API pods and handling authentication, authorization, and rate limiting.
+**ALB-** an Amazon Load Balancer connected to public subnets in both AZ's for distributing traffic to front-end pods.
 
 The infrastructure includes two Availability Zones for high availability and disaster recovery.  
 In each AZ, there is:  
 - a public subnet for the ALB  
 - a private subnet for the EKS node group  
 - a private subnet for RDS
-
 
 For the EKS cluster, I have chosen to use a node group instead of Fargate for greater flexibility, including node auto-scaling and control over the underlying infrastructure.
 
@@ -33,52 +32,46 @@ For real-time data streaming, the pods connect to Amazon Kinesis for ingesting a
 
 Alerts are configured in CloudWatch.
 
-Monitoring Metrics:
+**Monitoring Metrics & Alerting Strategy:**
 
-EKS Pods & Nodes:
-- CPU utilization
-- Memory utilization
-- Disk I/O
-- Network I/O
-- Pod restarts
-- failed scheduling
+*EKS Pods & Nodes:*
+- CPU utilization. Warning alert at 70% for 5 min, Critical alert at 85% for 5 min.
+- CPU utilization. Warning alert at 70%, Critical alert at 80%.
+- Memory utilization. 
+- Disk I/O.
+- Network I/O.
+- Pod restarts. warning alert at 3 Pod restarts in 10 mins.
+- failed scheduling. warning alert at FailedSchedueling events > 0 for 5 mins. 
 
-API & Real-time Processing:
-- Request latency
-- throughput
-- Error rates
+*API :*
+- Request latency. Warning alert at p95 > 500ms, Critical alert at p95 > 2s.
+- throughput.
+- Error rates. alert at 5xx > 1%
 
-Kinesis:
-- Queue depth
+*Kinesis:*
+- Queue depth. warning alert at IteratorAgeMilliseconds > 1 mins, Critical alert at IteratorAgeMilliseconds > 5 mins. 
 - Processing latency
-- Error rates
+- Error rates. warning alert at 5xx > 1%, Critical at 5xx > 5%.
 
-RDS:
-- CPU, Memory, Disk usage
-- Connections count
-- Read/Write latency
-- Replication lag 
+*RDS:*
+- CPU utilization. Warning alert at 70% for 5 min, Critical alert at 80% for 5 min.
+- Memory utilization. warning alert at Freeable memory < 1GB for 10 mins, Critical alert at freeable memory < 500MB for 10 mins.
+- Disk usage. Warning alert at 20% free storage, Critical alert at 10% free storage.
+- Connections count. Warning alert at 80% of max connections, Critical alert at 90%. 
+- Read/Write latency. Warning alert at latency > 100ms for 5 mins, Critical alert at latency > 300ms for 5mins.
+- Replication lag. Warning alert at ReplicaLag > 30–60s for 5 mins, Warning alert at ReplicaLag > 5mins for 5-10 mins
 
-ALB:
-- Request coount
-- Latency
-- Error rates
-- Healthy vs. Unhealthy targets
+*ALB:*
+- Request count
+- Latency. Warning alert at p95 > 500ms, Critical alert at p95 > 2s.
+- Error rates. warning alert at 5xx > 1%, Critical at 5xx > 5%.
+- Unhealthy targets. Critical Alert at Unhealthy targets > 0.
 
-CloudFront:
+*CloudFront:*
 - Cache hit/miss ratio
 - Latency
 - Error rates
 
-Alerting Strategy:
-for cpu utilization- 80% for 5 minutes will triger an alert
-
-for memory usage- 75% will trigger an alert
-
-API error rate > threshold → alert
-
-DB replication lag > threshold → alert
-
-
+thresholds are tuned after observing production baselines.
 
 

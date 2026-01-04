@@ -11,7 +11,7 @@ this diagram shows the architecture of my Veeva-assignment app.
 
 **Amazon API Gateway-** manages API requests, routing them to the backend API pods and handling authentication, authorization, and rate limiting.
 
-**ALB-** an Amazon Load Balancer connected to public subnets in both AZ's for distributing traffic to front-end pods.
+**ALB-** an Amazon Load Balancer connected to public subnets in both AZ's for distributing traffic to pods in private subnet.
 
 The infrastructure includes two Availability Zones for high availability and disaster recovery.  
 In each AZ, there is:  

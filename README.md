@@ -34,46 +34,63 @@ For the database, I have chosen Amazon RDS with Multi-AZ deployment for high ava
 
 For real-time data streaming, the pods connect to Amazon Kinesis for ingesting and processing streaming data.
 
-Alerts are configured in CloudWatch.
+Monitoring and logs are collected and managed using Amazon CloudWatch.
 
 **Monitoring Metrics & Alerting Strategy:**
 
 *EKS Pods & Nodes:*
-- CPU utilization. Warning alert at 70% for 5 min, Critical alert at 85% for 5 min.
-- Memory utilization. Warning alert at 70%, Critical alert at 80%.
-- Disk I/O.
-- Network I/O.
-- Pod restarts. warning alert at 3 Pod restarts in 10 mins evaluation period.
-- failed scheduling. warning alert at FailedSchedueling events > 0 for 5 mins. 
+
+| Metric             | Warning Threshold              | Critical Threshold              |
+| ------------------ | ------------------------------ | --------------------------------|
+| CPU utilization    | 70% for 5 min                  | 85% for 5 min                   |
+| Memory utilization | 70%                            | 80%                             |
+| Disk I/O           | –                              | –                               |
+| Network I/O        | –                              | –                               |
+| Pod restarts       | ≥ 1 restarts per pod in 10 min | ≥ 3 restarts per pod in 10 min  |
+| Failed scheduling  | > 1 events for 2 min           | > 3 events in 5 min             |
+
 
 *API :*
-- Request latency. Warning alert at p95 > 500ms, Critical alert at p95 > 2s.
-- throughput.
-- Error rates. alert at 5xx > 1%
+
+| Metric                | Warning Threshold | Critical Threshold |
+| --------------------- | ----------------- | ------------------ |
+| Request latency (p95) | > 500 ms          | > 2 s              |
+| Throughput            | –                 | –                  |
+| Error rate (5xx)      | > 1%              | > 5%               |
+
 
 *Kinesis:*
-- Queue depth. warning alert at IteratorAgeMilliseconds > 1 mins, Critical alert at IteratorAgeMilliseconds > 5 mins. 
-- Processing latency
-- Error rates. warning alert at 5xx > 1%, Critical at 5xx > 5%.
+
+| Metric                   | Warning Threshold | Critical Threshold |
+| ------------------------ | ----------------- | ------------------ |
+| Queue depth              | > 1 min           | > 5 min            |
+| Processing latency (p95  | > 30 s            | > 2 min            |
+| Error rate (5xx)         | > 1%              | > 5%               |
+
 
 *RDS:*
-- CPU utilization. Warning alert at 70% for 5 min, Critical alert at 80% for 5 min.
-- Memory utilization. warning alert at Freeable memory < 1GB for 10 mins, Critical alert at freeable memory < 500MB for 10 mins.
-- Disk usage. Warning alert at 20% free storage, Critical alert at 10% free storage.
-- Connections count. Warning alert at 80% of max connections, Critical alert at 90%. 
-- Read/Write latency. Warning alert at p95 > 100ms for 5 mins, Critical alert at p95 > 300ms for 5mins.
-- Replication lag. Warning alert at ReplicaLag > 30–60s for 5 mins, Critical alert at ReplicaLag > 5mins for 5-10 mins
+
+| Metric                   | Warning Threshold   | Critical Threshold   |
+| ------------------------ | ------------------- | -------------------- |
+| CPU utilization          | 70% for 5 min       | 80% for 5 min        |
+| Freeable memory          | < 1 GB for 10 min   | < 500 MB for 10 min  |
+| Disk usage               | < 20% free          | < 10% free           |
+| Connections count        | > 80% of max        | > 90% of max         |
+| Read/Write latency (p95) | > 100 ms for 5 min  | > 300 ms for 5 min   |
+| Replication lag          | > 30–60 s for 5 min | > 5 min for 5–10 min |
+
 
 *ALB:*
-- Request count.
-- Latency. Warning alert at p95 > 500ms, Critical alert at p95 > 2s.
-- Error rates. warning alert at 5xx > 1%, Critical alert at 5xx > 5%.
-- Unhealthy targets. Critical Alert at Unhealthy targets > 0.
+
+| Metric            | Warning Threshold | Critical Threshold |
+| ----------------- | ----------------- | ------------------ |
+| Request count     | –                 | –                  |
+| Latency (p95)     | > 500ms           | > 2s               |
+| Error rate (5xx)  | > 1%              | > 5%               |
+| Unhealthy targets | –                 | > 0                |
+
 
 *CloudFront:*
-- Cache hit/miss ratio. warning alert at cache hit ratio < 70%
-- Latency. Warning alert at p95 > 200ms, Critical alert at p95 > 500ms.
-- Error rates. warning alert at 5xx > 1%, Critical alert at 5xx > 5%.
 
 | Metric           | Warning Threshold | Critical Threshold |
 | ---------------- | ----------------- | ------------------ |

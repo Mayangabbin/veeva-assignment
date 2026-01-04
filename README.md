@@ -77,36 +77,9 @@ Alerts are configured in CloudWatch.
 
 | Metric           | Warning Threshold | Critical Threshold |
 | ---------------- | ----------------- | ------------------ |
-| Cache hit ratio  | < 70%             | < 50%              |
+| Cache hit ratio  | < 70%             | -                  |
 | Latency (p95)    | > 200ms           | > 500ms            |
 | Error rate (5xx) | > 1%              | > 5%               |
-
-
-| Component            | Metric             | Warning Threshold  | Critical Threshold | Evaluation Period | Notes                 |
-| -------------------- | ------------------ | ------------------ | ------------------ | ----------------- | --------------------- |
-| **EKS Pods & Nodes** | CPU utilization    | 70%                | 85%                | 5 min             | p95 across pods       |
-|                      | Memory utilization | 70%                | 85%                | 5 min             | –                     |
-|                      | Pod restarts       | ≥3 per pod         | –                  | 10 min            | Warning only          |
-|                      | Failed scheduling  | >0 events          | –                  | 5 min             | Warning only          |
-| **API**              | Request latency    | p95 > 500ms        | p95 > 2s           | 5 min             | –                     |
-|                      | Error rate (5xx)   | >1%                | >5%                | 5 min             | –                     |
-| **Kinesis**          | Queue depth        | IteratorAge >1 min | IteratorAge >5 min | 5 min             | –                     |
-|                      | Processing latency | p95 > baseline     | p95 > baseline     | 5 min             | adjust after baseline |
-|                      | Error rate (5xx)   | >1%                | >5%                | 5 min             | –                     |
-| **RDS**              | CPU utilization    | 70%                | 80%                | 5 min             | –                     |
-|                      | Freeable memory    | <1GB               | <500MB             | 10 min            | –                     |
-|                      | Disk usage         | <20% free          | <10% free          | –                 | –                     |
-|                      | Connections count  | 80% max            | 90% max            | –                 | –                     |
-|                      | Read/Write latency | p95 >100ms         | p95 >300ms         | 5 min             | –                     |
-|                      | Replication lag    | >30–60s            | >5 min             | 5–10 min          | –                     |
-| **ALB**              | Latency            | p95 >500ms         | p95 >2s            | 5 min             | –                     |
-|                      | Error rate (5xx)   | >1%                | >5%                | 5 min             | –                     |
-|                      | Unhealthy targets  | –                  | >0                 | –                 | Critical only         |
-| **CloudFront**       | Cache hit ratio    | <70%               | <50%               | 5 min             | –                     |
-|                      | Latency            | p95 >200ms         | p95 >500ms         | 5 min             | –                     |
-|                      | Error rate (5xx)   | >1%                | >5%                | 5 min             | –                     |
-
-
 
 
 thresholds are tuned after observing production baselines.

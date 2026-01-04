@@ -19,7 +19,7 @@ In each AZ, there is:
 - a private subnet for the EKS node group  
 - a private subnet for RDS
 
-For the EKS cluster, I have chosen to use a node group instead of Fargate for greater flexibility, including node auto-scaling and control over the underlying infrastructure.
+For the compute resource I've chose EKS cluster with node groups. it allows deployment and autoscaling of microservices, and flexible node autoscaling.
 
 The EKS node group has auto-scaling enabled, with a minimum of 2 nodes and a maximum of 5 nodes, allowing the cluster to adjust capacity based on workload demands. (Values may be adjusted after reviewing cluster metrics)
 
@@ -30,7 +30,7 @@ The EKS cluster has three deployments:
 
 Each deployment has an HPA enabled for autoscaling, configured with a CPU utilization target of 60%, and a minimum of 2 pods and a maximum of 10 pods. (to be adjusted after reviewing metrics.)
 
-For the database, I have chosen Amazon RDS with Multi-AZ deployment for high availability and disaster recovery.
+For the database, I have chosen Amazon RDS with Multi-AZ deployment for high availability and disaster recovery, and automatic failover and backups.
 
 For real-time data streaming, the pods connect to Amazon Kinesis for ingesting and processing streaming data.
 

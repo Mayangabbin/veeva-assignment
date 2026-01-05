@@ -40,7 +40,7 @@ module "app" {
 module "rds" {
   source            = "./modules/rds"
   vpc_id            = module.networking.vpc_id
-  db_name           = var.db_name
+  db_name           = var.prefix}-{var.environment}-db
   db_username       = var.db_username
   db_instance_class = var.db_instance_class
   node_sg_ids       = [module.eks.eks_node_group_sg_id]

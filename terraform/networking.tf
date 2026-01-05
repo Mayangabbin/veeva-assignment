@@ -50,6 +50,9 @@ resource "aws_subnet" "public" {
 
   tags = {
     Name = "public-subnet-${each.key}"
+    kubernetes.io/role/elb = 1
+    kubernetes.io/cluster/veeva-cluster = shared
+
   }
 }
 
@@ -108,6 +111,8 @@ resource "aws_subnet" "private_app" {
   tags = {
     Name = "private-app-${each.key}"
     Tier = "application"
+    kubernetes.io/role/internal-elb = 1
+    kubernetes.io/cluster/veeva-cluster = shared
   }
 }
 

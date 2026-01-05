@@ -13,3 +13,5 @@ output "kubeconfig" {
     token                  = data.aws_eks_cluster_auth.main.token
   }
 }
+
+output "eks_node_group_sg_id" {value = aws_eks_node_group.private_app_nodes.resources[0].security_groups[0]}

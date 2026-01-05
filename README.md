@@ -101,7 +101,8 @@ Monitoring and logs are collected and managed using Amazon CloudWatch.
 
 thresholds are tuned after observing production baselines.
 
-Suggestions for Future Enhancements:
+**Suggestions for Future Enhancements:**
+
 Enable multi factor authentication for cognito - TOTP / SMS MFA
 
 Implement lifecycle policies for RDS backups to save storage.

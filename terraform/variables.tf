@@ -19,7 +19,7 @@ variable "prefix" {
 # Environment name
 variable "environment" {
   type    = string
-  default = "prod"
+  default = "dev"
 }
 
 # VPC CIDR

@@ -75,13 +75,7 @@ variable "apps" {
   }
 }
 
-# Number of replicas per deployment
-variable "replicas" {
-  type    = number
-  default = 2
-}
-
-
+# DB
 variable "db_username" {
   type    = string
   default = "admin"
@@ -92,6 +86,7 @@ variable "db_instance_class" {
   default = "db.t3.medium"
 }
 
+## EKS nodes
 variable "node_desired_size" {
   type        = number
   default     = 2
@@ -107,3 +102,18 @@ variable "node_max_size" {
   default     = 5
 }
 
+## HPA
+variable "min_replicas" {
+  type    = number
+  default = 2
+}
+
+variable "max_replicas" {
+  type    = number
+  default = 10
+}
+
+variable "cpu_target_percentage" {
+  type    = number
+  default = 70
+}

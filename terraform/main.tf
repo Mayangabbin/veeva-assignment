@@ -35,21 +35,12 @@ module "eks" {
 
 }
 
-# Provider for EKS cluster
-provider "kubernetes" {
-  host                   = module.eks.kubeconfig.host
-  cluster_ca_certificate = base64decode(module.eks.kubeconfig.cluster_ca_certificate)
-  token                  = module.eks.kubeconfig.token
-}
-
 ### APP MODULE ###
 # Creates 3 deployments with services and ALB ingress for frontend
 
 module "app" {
   source    = "./modules/app"
-  providers = {
-    kubernetes = kubernetes
-  }
+  
   apps = {
     frontend = {
       image = "veeva/frontend:latest"

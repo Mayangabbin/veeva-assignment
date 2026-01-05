@@ -10,7 +10,7 @@ resource "kubernetes_deployment" "apps" {
   }
 
   spec {
-    replicas = var.replicas
+    replicas = var.min_replicas
 
     selector {
       match_labels = {
@@ -101,6 +101,40 @@ resource "kubernetes_ingress" "frontend" {
               }
             }
           }
+        }
+      }
+    }
+  }
+}
+
+# HPA
+resource "kubernetes_horizontal_pod_autoscaler_v2" "apps" {
+  for_each = var.apps
+
+  metadata {
+    name      = "${each.key}-hpa"
+    namespace = var.namespace
+  }
+
+  spec {
+    min_replicas = var.min_replicas
+    max_replicas = var.max_replicas
+
+    scale_target_ref {
+      api_version = "apps/v1"
+      kind        = "Deployment"
+      name        = kubernetes_deployment.apps[each.key].metadata[0].name
+    }
+
+    metric {
+      type = "Resource"
+
+      resource {
+        name = "cpu"
+
+        target {
+          type                = "Utilization"
+          average_utilization = var.cpu_target_percentage
         }
       }
     }

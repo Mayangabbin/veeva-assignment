@@ -103,7 +103,7 @@ data "aws_iam_policy_document" "lb_assume_role" {
 
     principals {
       type        = "Federated"
-      identifiers = [aws_eks_cluster.main.identity[0].oidc[0].issuer]
+      identifiers = [aws_eks_cluster.main.identity[0].oidc.0.issuer]
     }
 
     condition {

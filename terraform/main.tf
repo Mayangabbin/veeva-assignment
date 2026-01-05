@@ -46,10 +46,15 @@ module "app" {
 module "rds" {
   source            = "./modules/rds"
   vpc_id            = module.networking.vpc_id
-  db_name           = var.prefix}-{var.environment}-db
+  db_name           = "${var.prefix}-${var.environment}-db"
   db_username       = var.db_username
   db_instance_class = var.db_instance_class
   node_sg_ids       = [module.eks.eks_node_group_sg_id]
   subnet_ids        = [for az, cidr in module.networking.private_app_subnets : cidr]
 }
 
+### WAF MODULE ###
+# Creates WAF ACL for CloudFront
+module "rds" {
+  prefix            = var.prefix
+}

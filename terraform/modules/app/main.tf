@@ -26,6 +26,16 @@ resource "kubernetes_deployment" "apps" {
       }
 
       spec {
+        # Spread pods across AZs for HA
+        topology_spread_constraint {
+          max_skew = 1
+          topology_key = "topology.kubernetes.io/zone"
+          label_selector {
+            match_labels = {
+              app = each.key
+            }
+          }
+        }
         container {
           name  = each.key
           image = each.value.image

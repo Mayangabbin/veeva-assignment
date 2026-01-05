@@ -81,7 +81,7 @@ resource "aws_nat_gateway" "nat" {
 
 # Private app subnets
 resource "aws_subnet" "private_app" {
-  for_each = var.private_app
+  for_each = var.private_app_subnets
 
   vpc_id            = aws_vpc.main.id
   cidr_block        = each.value
@@ -97,7 +97,7 @@ resource "aws_subnet" "private_app" {
 
 # App private route tables
 resource "aws_route_table" "private_app" {
-  for_each = var.private_app
+  for_each = var.private_app_subnets
   vpc_id = aws_vpc.main.id
 
   tags = {
@@ -107,7 +107,7 @@ resource "aws_route_table" "private_app" {
 
 # Routes to NAT Gateways
 resource "aws_route" "private_nat" {
-  for_each = var.private_app
+  for_each = var.private_app_subnets
 
   route_table_id         = aws_route_table.private_app[each.key].id
   destination_cidr_block = "0.0.0.0/0"
@@ -116,7 +116,7 @@ resource "aws_route" "private_nat" {
 
 # Associate app private subnets with app private route tables
 resource "aws_route_table_association" "private_app" {
-  for_each = var.private_app
+  for_each = var.private_app_subnets
 
   subnet_id      = aws_subnet.private_app[each.key].id
   route_table_id = aws_route_table.private_app[each.key].id
@@ -124,7 +124,7 @@ resource "aws_route_table_association" "private_app" {
 
 # Private DB subnets
 resource "aws_subnet" "private_db" {
-  for_each = var.private_db
+  for_each = var.private_db_subnets
 
   vpc_id            = aws_vpc.main.id
   cidr_block        = each.value
@@ -146,7 +146,7 @@ resource "aws_route_table" "private_db" {
 }
 
 resource "aws_route_table_association" "private_db" {
-  for_each = var.private_db
+  for_each = var.private_db_subnets
 
   subnet_id      = aws_subnet.private_db[each.key].id
   route_table_id = aws_route_table.private_db.id

@@ -19,7 +19,7 @@ In each AZ, there is:
 - a private subnet for the EKS node group  
 - a private subnet for RDS
 
-For the compute resource I've chose EKS cluster with node groups. it allows deployment and autoscaling of microservices, and flexible node autoscaling.
+For the compute resource I chose EKS cluster with node groups. it allows deployment and autoscaling of microservices, and flexible node autoscaling.
 
 The EKS node group has auto-scaling enabled, with a minimum of 2 nodes and a maximum of 5 nodes, allowing the cluster to adjust capacity based on workload demands. (Values may be adjusted after reviewing cluster metrics)
 
@@ -28,7 +28,7 @@ The EKS cluster has three deployments:
 - Backend  
 - Real-time Data Streaming
 
-Each deployment has an HPA enabled for autoscaling, configured with a CPU utilization target of 60%, and a minimum of 2 pods and a maximum of 10 pods. (to be adjusted after reviewing metrics.)
+Each deployment has an HPA enabled for autoscaling, configured with a CPU utilization target of 70%, and a minimum of 2 pods and a maximum of 10 pods. (to be adjusted after reviewing metrics.)
 
 For the database, I have chosen Amazon RDS with Multi-AZ deployment for high availability and disaster recovery, and automatic failover and backups.
 
@@ -103,7 +103,7 @@ thresholds are tuned after observing production baselines.
 
 **Suggestions for Future Enhancements:**
 
-Enable multi factor authentication for cognito - TOTP / SMS MFA
+Configure HPA based on custom metrics
 
 Implement lifecycle policies for RDS backups to save storage.
 

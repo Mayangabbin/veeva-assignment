@@ -50,6 +50,9 @@ resource "aws_iam_role_policy_attachment" "eks_node_attach" {
 
 # EKS cluster
 resource "aws_eks_cluster" "main" {
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_cluster_attach
+  ]
   name     = "my-eks-cluster"
   role_arn = aws_iam_role.eks_cluster_role.arn
   version  = "1.29"
@@ -64,7 +67,7 @@ resource "aws_eks_cluster" "main" {
   }
 
   tags = {
-    Environment = "dev"
+    Environment = "prod"
   }
 }
 
@@ -85,4 +88,62 @@ resource "aws_eks_node_group" "private_app_nodes" {
   ami_type       = "AL2_x86_64"
 }
 
+resource "aws_iam_policy" "aws_lb_controller" {
+  name        = "AWSLoadBalancerControllerIAMPolicy"
+  path        = "/"
+  description = "IAM policy for AWS Load Balancer Controller"
+
+  policy = file("iam_policy.json") 
+}
+
+resource "aws_iam_role" "lb_controller_role" {
+  assume_role_policy = data.aws_iam_policy_document.lb_assume_role.json
+  name               = "eks-lb-controller-role"
+}
+
+data "aws_iam_policy_document" "lb_assume_role" {
+  statement {
+    effect  = "Allow"
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
+    principals {
+      type        = "Federated"
+      identifiers = [aws_eks_cluster.main.identity[0].oidc[0].issuer]
+    }
+
+    condition {
+      test     = "StringEquals"
+      values   = ["system:serviceaccount:kube-system:aws-load-balancer-controller"]
+      variable = "${replace(aws_eks_cluster.main.identity[0].oidc[0].issuer, "https://", "")}:sub"
+    }
+  }
+}
+resource "kubernetes_service_account" "aws_lb_controller" {
+  metadata {
+    name      = "aws-load-balancer-controller"
+    namespace = "kube-system"
+    annotations = {
+      "eks.amazonaws.com/role-arn" = aws_iam_role.lb_controller.arn
+    }
+  }
+}
+
+resource "helm_release" "aws_lb_controller" {
+  name       = "aws-load-balancer-controller"
+  repository = "https://aws.github.io/eks-charts"
+  chart      = "aws-load-balancer-controller"
+  namespace  = "kube-system"
+
+  values = [
+    yamlencode({
+      clusterName       = aws_eks_cluster.main.name
+      serviceAccount    = {
+        create = false
+        name   = kubernetes_service_account.aws_lb_controller.metadata[0].name
+      }
+      region            = "us-east-1" # שנה לפי האזור שלך
+      vpcId             = aws_vpc.main.id
+    })
+  ]
+}
 

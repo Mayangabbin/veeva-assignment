@@ -56,7 +56,7 @@ resource "aws_eks_cluster" "main" {
   version  = var.eks_version
 
   vpc_config {
-    subnet_ids = concat(var.private_subnet_ids, var.public_subnet_ids)
+    subnet_ids = concat(var.private_app_subnet_ids, var.public_subnet_ids)
     endpoint_public_access  = true
     endpoint_private_access = true
   }
@@ -136,8 +136,8 @@ resource "helm_release" "aws_lb_controller" {
         create = false
         name   = kubernetes_service_account.aws_lb_controller.metadata[0].name
       }
-      region            = "us-east-1" # שנה לפי האזור שלך
-      vpcId             = aws_vpc.main.id
+      region            = "us-east-1" 
+      vpcId             = var.vpc_id
     })
   ]
 }

@@ -1,3 +1,6 @@
+### NETWORKING MODULE ###
+# Creates VPC, 2 Public subnets, 4 Private subnets.
+
 module "networking" {
   source = "./modules/networking"
 
@@ -17,6 +20,10 @@ module "networking" {
     "eu-central-1b" = "10.0.21.0/24"
   }
 }
+
+### EKS MODULE ###
+# Creates EKS cluster with ALB controller
+
 module "eks" {
   source = "./modules/eks"
   vpc_id = module.networking.vpc_id
@@ -34,6 +41,9 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(module.eks.kubeconfig.cluster_ca_certificate)
   token                  = module.eks.kubeconfig.token
 }
+
+### APP MODULE ###
+# Creates 3 deployments with services and ALB ingress for frontend
 
 module "app" {
   source    = "./modules/app"
@@ -54,4 +64,20 @@ module "app" {
       port  = 9090
     }
   }
+}
+
+### RDS MODULE ###
+# Creates multi AZ rds instance with SG allowing ingress
+# from EKS nodes
+
+module "rds" {
+  source = "./modules/rds"
+
+  vpc_id = module.networking.vpc_id
+  db_name               = "veeva-db"
+  db_username           = "admin"
+  db_password           = "SuperSecret123!"
+  db_instance_class     = "db.t3.medium"
+  node_sg_ids = [module.eks.eks_node_group_sg_id]
+  subnet_ids            = module.networking.private_app_subnet_ids
 }

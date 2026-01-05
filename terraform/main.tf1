@@ -17,8 +17,41 @@ module "networking" {
     "eu-central-1b" = "10.0.21.0/24"
   }
 }
+module "eks" {
+  source = "./modules/eks"
+  vpc_id = module.networking.vpc_id
+  public_subnet_ids = module.networking.public_subnet_ids
+  private_app_subnet_ids = module.networking.private_app_subnet_ids
+  cluster_name       = "my-eks-cluster"
+  prefix             = "prod"
+  environment        = "prod"
 
-# למחוקקקקק
-output "vpc_id" {
-  value = module.networking.vpc_id
+}
+
+# Provider for EKS cluster
+provider "kubernetes" {
+  host                   = module.eks.kubeconfig.host
+  cluster_ca_certificate = base64decode(module.eks.kubeconfig.cluster_ca_certificate)
+  token                  = module.eks.kubeconfig.token
+}
+
+module "app" {
+  source    = "./modules/app"
+  providers = {
+    kubernetes = kubernetes
+  }
+  apps = {
+    frontend = {
+      image = "veeva/frontend:latest"
+      port  = 80
+    }
+    backend = {
+      image = "veeva/backend:latest"
+      port  = 8080
+    }
+    datastream = {
+      image = "veeva/datastream:latest"
+      port  = 9090
+    }
+  }
 }

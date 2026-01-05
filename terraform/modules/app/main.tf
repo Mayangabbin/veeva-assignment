@@ -42,11 +42,11 @@ resource "kubernetes_deployment" "apps" {
 
 # Cluster IP service for each app
 resource "kubernetes_service" "apps" {
-  for_each = local.apps
+  for_each = var.apps
 
   metadata {
     name      = each.key
-    namespace = "default"
+    namespace = var.namespace
     labels = {
       app = each.key
     }
@@ -68,7 +68,7 @@ resource "kubernetes_service" "apps" {
 resource "kubernetes_ingress" "frontend" {
   metadata {
     name      = "frontend-ingress"
-    namespace = "default"
+    namespace = var.namespace
     annotations = {
       "kubernetes.io/ingress.class" = "alb"
       "alb.ingress.kubernetes.io/scheme" = "internet-facing"

@@ -76,7 +76,6 @@ module "rds" {
   vpc_id = module.networking.vpc_id
   db_name               = "veeva-db"
   db_username           = "admin"
-  db_password           = "SuperSecret123!"
   db_instance_class     = "db.t3.medium"
   node_sg_ids = [module.eks.eks_node_group_sg_id]
   subnet_ids            = module.networking.private_app_subnet_ids

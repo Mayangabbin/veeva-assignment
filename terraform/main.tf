@@ -33,9 +33,11 @@ module "eks" {
 ### APP MODULE ###
 # Creates 3 deployments with services and ALB ingress for frontend
 module "app" {
-  source    = "./modules/app"
-  apps      = var.apps
-  replicas  = var.replicas
+  source                = "./modules/app"
+  apps                  = var.apps
+  min_replicas          = var.min_replicas
+  max_replicas          = var.max_replicas
+  cpu_target_precentage = var.cpu_target_precentage 
 }
 
 ### RDS MODULE ###

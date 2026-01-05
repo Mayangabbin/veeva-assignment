@@ -91,3 +91,19 @@ variable "db_instance_class" {
   type    = string
   default = "db.t3.medium"
 }
+
+variable "node_desired_size" {
+  type        = number
+  default     = 2
+}
+
+variable "node_min_size" {
+  type        = number
+  default     = 2
+}
+
+variable "node_max_size" {
+  type        = number
+  default     = 5
+}
+

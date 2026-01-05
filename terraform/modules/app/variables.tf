@@ -10,7 +10,18 @@ variable "namespace" {
   default     = "veeva"
 }
 
-variable "replicas" 
-  type        = number
-  default     = 2
+variable "min_replicas" {
+  type    = number
+  default = 2
 }
+
+variable "max_replicas" {
+  type    = number
+  default = 10
+}
+
+variable "cpu_target_percentage" {
+  type    = number
+  default = 70
+}
+

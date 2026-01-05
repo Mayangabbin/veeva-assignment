@@ -115,7 +115,7 @@ data "aws_iam_policy_document" "lb_assume_role" {
 }
 resource "kubernetes_service_account" "aws_lb_controller" {
   metadata {
-    name      = "${var.prefix}aws-load-balancer-controller"
+    name      = "${var.prefix}-aws-load-balancer-controller"
     namespace = "kube-system"
     annotations = {
       "eks.amazonaws.com/role-arn" = aws_iam_role.lb_controller.arn

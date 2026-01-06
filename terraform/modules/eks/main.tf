@@ -12,6 +12,7 @@ resource "aws_iam_role" "eks_cluster_role" {
       }
     }]
   })
+  tags = var.tags
 }
 
 # Attach role
@@ -34,6 +35,7 @@ resource "aws_iam_role" "eks_node_role" {
       Action = "sts:AssumeRole"
     }]
   })
+  tags = var.tags
 }
 
 # attach role
@@ -61,8 +63,8 @@ resource "aws_eks_cluster" "main" {
     endpoint_private_access = true
   }
 
-  tags = {
-    Environment = var.environment
+  tags = var.tags
+
   }
 }
 
@@ -81,6 +83,7 @@ resource "aws_eks_node_group" "private_app_nodes" {
 
   instance_types = [var.node_instance_type]
   ami_type       = "AL2_x86_64"
+  tags = var.tags
 }
 
 # IAM Policy & Role for AWS Load Balancer Controller
@@ -94,6 +97,7 @@ resource "aws_iam_policy" "aws_lb_controller" {
 resource "aws_iam_role" "lb_controller_role" {
   assume_role_policy = data.aws_iam_policy_document.lb_assume_role.json
   name               = "eks-lb-controller-role"
+  tags = var.tags
 }
 
 data "aws_iam_policy_document" "lb_assume_role" {
@@ -187,6 +191,7 @@ resource "aws_iam_role" "cluster_autoscaler" {
       }
     }]
   })
+  tags = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "cluster_autoscaler_attach" {

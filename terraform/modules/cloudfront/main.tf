@@ -37,4 +37,6 @@ resource "aws_cloudfront_distribution" "frontend_cf" {
   viewer_certificate {
     cloudfront_default_certificate = true
   }
+
+  web_acl_id = var.cf_waf_arn
 }

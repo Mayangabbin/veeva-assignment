@@ -37,6 +37,7 @@ module "eks" {
 # Creates 3 deployments with services and ALB ingress for frontend
 module "app" {
   source                = "./modules/app"
+  namespace             = var.namespace
   apps                  = var.apps
   min_replicas          = var.min_replicas
   max_replicas          = var.max_replicas

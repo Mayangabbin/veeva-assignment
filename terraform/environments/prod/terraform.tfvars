@@ -16,4 +16,6 @@ private_db_subnets = {
 }
 namespace  = "veeva-app"
 node_instance_type = "m5.large"
-
+db_engine = "postgres"
+db_engine_version = "15.3"
+db_instance_class = "db.t3.medium"

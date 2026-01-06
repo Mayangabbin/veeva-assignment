@@ -1,6 +1,6 @@
 # AWS Provider
 provider "aws" {
-  region = "eu-west-1"
+  region = var.region
 }
 # Provider for EKS cluster
 provider "kubernetes" {

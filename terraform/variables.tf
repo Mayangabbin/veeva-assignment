@@ -87,6 +87,11 @@ variable "apps" {
   }
 }
 
+variable "ingress_name" {
+  type = string
+  default = "frontend-ingress"
+}
+
 # DB
 variable "db_username" {
   type    = string

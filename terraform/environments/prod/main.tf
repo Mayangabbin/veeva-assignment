@@ -64,7 +64,7 @@ module "rds" {
 }
 
 ### CLOUDFRONT MODULE ###
-#
+# Creates a CloudFront Distribution for serving traffic to ALB
 module "cloudfront" {
   source      = "./modules/cloudfront"
   cf_waf_arn  = module.waf.cf_waf_arn

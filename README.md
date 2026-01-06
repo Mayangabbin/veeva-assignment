@@ -122,9 +122,9 @@ This IaC is partial and not fully completed, but it demonstrates the technical s
 The Terraform code is organized into modules:
 
 *Networking module*- Creates a VPC and, for each of the two availability zones, creates:
-Public subnet
-Private subnet for the node group
-Private subnet for the database
+Public subnet,
+Private subnet for the node group,
+Private subnet for the database.
 
 *EKS module*- Creates an EKS cluster and node group, and installs the ALB Controller.
 

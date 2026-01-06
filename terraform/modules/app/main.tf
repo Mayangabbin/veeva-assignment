@@ -87,7 +87,7 @@ resource "kubernetes_service" "apps" {
 # ALB Ingress for frontend
 resource "kubernetes_ingress" "frontend" {
   metadata {
-    name      = "frontend-ingress"
+    name      = var.ingress_name
     namespace = var.namespace
     annotations = {
       "kubernetes.io/ingress.class" = "alb"

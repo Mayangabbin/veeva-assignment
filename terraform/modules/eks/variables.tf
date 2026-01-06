@@ -25,22 +25,18 @@ variable "private_subnet_ids" {
 
 variable "node_instance_type" {
   type    = string
-  default = "t3.medium"
 }
 
 variable "node_desired_size" {
   type    = number
-  default = 2
 }
 
 variable "node_min_size" {
   type    = number
-  default = 2
 }
 
 variable "node_max_size" {
   type    = number
-  default = 5
 }
 
 variable "alb_iam_policy_file" {

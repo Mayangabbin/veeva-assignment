@@ -39,6 +39,16 @@ resource "kubernetes_deployment" "apps" {
         container {
           name  = each.key
           image = each.value.image
+          resources {
+            requests = {
+              cpu    = each.value.cpu_request    
+              memory = each.value.memory_request 
+            }
+            limits = {
+              cpu    = each.value.cpu_limit    
+              memory = each.value.memory_limit  
+            }
+          }
 
           port {
             container_port = each.value.port

@@ -75,6 +75,11 @@ variable "apps" {
   }
 }
 
+variable "node_instance_type" {
+  type    = string
+  default = t3.medium
+}
+
 variable "ingress_name" {
   type = string
   default = "frontend-ingress"

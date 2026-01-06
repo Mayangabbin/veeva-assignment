@@ -63,14 +63,26 @@ variable "apps" {
     frontend = {
       image = "veeva/frontend:latest"
       port  = 80
+      cpu_request = "250m"
+      cpu_limit   = "500m"
+      memory_request = "256Mi"
+      memory_limit   = "512Mi"
     }
     backend = {
       image = "veeva/backend:latest"
       port  = 8080
+      cpu_request = "500m"
+      cpu_limit   = "1000m"
+      memory_request = "512Mi"
+      memory_limit   = "1024Mi"
     }
     datastream = {
       image = "veeva/datastream:latest"
       port  = 9090
+      cpu_request = "200m"
+      cpu_limit   = "400m"
+      memory_request = "256Mi"
+      memory_limit   = "512Mi"
     }
   }
 }

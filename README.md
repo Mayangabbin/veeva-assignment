@@ -130,7 +130,7 @@ Private subnet for the database.
 
 *App module*- Creates three deployments: frontend, backend, and data-stream, with a service for each deployment. Horizontal Pod Autoscaler (HPA) is configured with a CPU threshold of 70%. Deployments are spread evenly across availability zones. An ALB Ingress is created for the frontend deployment.
 
-*RDS module*- cCreates a multi-AZ RDS database with ingress allowed from the node group’s security group. The database materuser's password is managed and stored in AWS Secrets Manager. Pod access is handled through IAM roles.
+*RDS module*- Creates a multi-AZ RDS database with ingress allowed from the node group’s security group. The database materuser's password is managed and stored in AWS Secrets Manager. Pod access is handled through IAM roles.
 
 *WAF module*- Creates a WAF ACL on CloudFront to enforce common rules.
 

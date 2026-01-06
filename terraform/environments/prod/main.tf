@@ -1,5 +1,8 @@
 locals {
   cluster_name = "${var.prefix}-${var.environment}-eks"
+  tags = {
+    Environment = var.environment
+  }
 }
 
 ### NETWORKING MODULE ###
@@ -66,6 +69,7 @@ module "cloudfront" {
   source      = "./modules/cloudfront"
   cf_waf_arn  = module.waf.cf_waf_arn
   ingress_name = var.ingress_name
+  tags = var.tags
 }
 
 

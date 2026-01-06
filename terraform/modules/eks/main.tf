@@ -70,10 +70,7 @@ resource "aws_eks_cluster" "main" {
 
 # EKS node group
 resource "aws_eks_node_group" "private_app_nodes" {
-  depends_on = [
-    aws_iam_role_policy_attachment.eks_node_attach,
-    aws_eks_cluster.main
-  ]
+  depends_on = [ aws_iam_role_policy_attachment.eks_node_attach ]
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = "${var.prefix}-private-app-ng"
   node_role_arn   = aws_iam_role.eks_node_role.arn
@@ -133,7 +130,6 @@ resource "kubernetes_service_account" "aws_lb_controller" {
 
 resource "helm_release" "aws_lb_controller" {
   depends_on = [
-    kubernetes_service_account.aws_lb_controller,
     aws_iam_role.lb_controller_role,
     aws_eks_node_group.private_app_nodes
   ]
@@ -223,7 +219,6 @@ resource "kubernetes_service_account" "cluster_autoscaler" {
 # Install autoscaler
 resource "helm_release" "cluster_autoscaler" {
   depends_on = [
-    kubernetes_service_account.cluster_autoscaler,
     aws_iam_role.cluster_autoscaler,
     aws_eks_node_group.private_app_nodes
   ]

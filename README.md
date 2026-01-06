@@ -107,8 +107,6 @@ thresholds are tuned after observing production baselines.
 
 Configure HPA based on custom metrics
 
-Implement lifecycle policies for RDS backups to save storage.
-
 Create centralized dashboards in CloudWatch for system overview.
 
 Add cache layer for api responses (Redis).
@@ -150,3 +148,14 @@ service for frontend and backend.. Horizontal Pod Autoscaler (HPA) is configured
 - Cognito
 - API Gateway
 
+### Cost Optimiation Strategies:
+
+Spot Instances for Data Processing: Real-time data processing pods run on a dedicated Spot Instance Node Group. Even if AWS reclaims an instance, Kubernetes will simply reschedule the pod on another node. (since the data stream is buffered in Amazon Kinesis, any instance interruption handled by EKS results in zero data loss)
+
+Right-Sizing: Perform load testing to establish baselines. After deployment,  use automated tools (AWS Compute Optimize) to analyze CPU/Memory utilization and reduce over-provisioned instances.
+
+Storage Auto-scaling for RDS: Start with the minimum required and enable Storage Auto-scaling. This prevents paying for unused space.
+
+CloudWatch Logs Lifecycle: Implement Retention Policy to delete\archive logs after a defined period.
+
+RDS Snapshot Lifecycle: Configure Automated Backup Policy with a defined retention window.

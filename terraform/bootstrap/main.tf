@@ -1,3 +1,5 @@
+### Bootstrap script creates S3 bucket and DynamoDB lock for terraform backend
+
 provider "aws" {
   region = var.region
 }

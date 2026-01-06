@@ -1,25 +1,21 @@
 # AWS region
 variable "region" {
   type    = string
-  default = "eu-central-1"
 }
 
 # Availability Zones
 variable "azs" {
   type    = list(string)
-  default = ["eu-central-1a", "eu-central-1b"]
 }
 
 # Prefix for naming
 variable "prefix" {
   type    = string
-  default = "veeva"
 }
 
 # Environment name
 variable "environment" {
   type    = string
-  default = "dev"
 }
 
 # VPC CIDR
@@ -31,33 +27,25 @@ variable "vpc_cidr" {
 # Subnet CIDRs per AZ
 variable "public_subnets" {
   type = map(string)
-  default = {
-    "eu-central-1a" = "10.0.1.0/24"
-    "eu-central-1b" = "10.0.2.0/24"
-  }
 }
 
 variable "private_app_subnets" {
   type = map(string)
-  default = {
-    "eu-central-1a" = "10.0.10.0/24"
-    "eu-central-1b" = "10.0.11.0/24"
-  }
 }
 
 variable "private_db_subnets" {
   type = map(string)
-  default = {
-    "eu-central-1a" = "10.0.20.0/24"
-    "eu-central-1b" = "10.0.21.0/24"
-  }
 }
 
 # Apps to deploy
 variable "apps" {
   type = map(object({
-    image = string
-    port  = number
+    image           = string
+    port            = number
+    cpu_request     = string
+    cpu_limit       = string
+    memory_request  = string
+    memory_limit    = string
   }))
   default = {
     frontend = {

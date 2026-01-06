@@ -15,4 +15,5 @@ private_db_subnets = {
   "eu-central-1b" = "10.0.21.0/24"
 }
 namespace  = "veeva-app"
+node_instance_type = "m5.large"
 

@@ -128,7 +128,8 @@ Private subnet for the database.
 
 *EKS module*- Creates an EKS cluster and node group, and installs the ALB Controller.
 
-*App module*- Creates three deployments: frontend, backend, and data-stream, with a service for each deployment. Horizontal Pod Autoscaler (HPA) is configured with a CPU threshold of 70%. Deployments are spread evenly across availability zones. An ALB Ingress is created for the frontend deployment.
+*App module*- Creates three deployments: frontend, backend, and datastream. with a Cluster IP
+service for frontend and backend.. Horizontal Pod Autoscaler (HPA) is configured with a CPU threshold of 70%. Deployments are spread evenly across availability zones. An ALB Ingress is created for the frontend deployment.
 
 *RDS module*- Creates a multi-AZ RDS database with ingress allowed from the node group’s security group. The database materuser's password is managed and stored in AWS Secrets Manager. Pod access is handled through IAM roles.
 

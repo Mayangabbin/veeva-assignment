@@ -81,7 +81,7 @@ resource "kubernetes_ingress" "frontend" {
     namespace = var.namespace
     annotations = {
       "kubernetes.io/ingress.class" = "alb"
-      "alb.ingress.kubernetes.io/scheme" = "internet-facing"
+      "alb.ingress.kubernetes.io/scheme" = "internal"
       "alb.ingress.kubernetes.io/listen-ports" = jsonencode([{"HTTP": 80}])
     }
   }

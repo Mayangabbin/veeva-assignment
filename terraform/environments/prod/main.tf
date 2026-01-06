@@ -55,6 +55,7 @@ module "rds" {
   db_username       = var.db_username
   db_instance_class = var.db_instance_class
   engine            = var.db_engine
+  allocated_storage = db_allocated_storage
   node_sg_ids       = [module.eks.eks_node_group_sg_id]
   subnet_ids        = [for az, cidr in module.networking.private_app_subnets : cidr]
 }

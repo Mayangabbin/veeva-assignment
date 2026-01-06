@@ -7,6 +7,8 @@ this diagram shows the architecture of my Veeva-assignment app.
 
 **Amazon Cognito-** manages authentication and authorization and handles user sign-up, sign-in, and access control for the application.
 
+**AWS WAF** – a Web Application Firewall applied on CloudFront to enforce common security rules and protect the application from common web exploits.
+
 **Amazon Cloudfront-** a CDN that delivers the application’s front-end content using edge locations for low latency and high availability.
 
 **Amazon API Gateway-** manages API requests, routing them to the backend API pods and handling authentication, authorization, and rate limiting.

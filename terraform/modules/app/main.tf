@@ -60,9 +60,9 @@ resource "kubernetes_deployment" "apps" {
 
 }
 
-# Cluster IP service for each app
+# Cluster IP service for frontend, backend
 resource "kubernetes_service" "apps" {
-  for_each = var.apps
+  for_each = { for k, v in var.apps : k => v if k != "datastream" }
 
   metadata {
     name      = each.key

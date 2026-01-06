@@ -135,10 +135,11 @@ service for frontend and backend.. Horizontal Pod Autoscaler (HPA) is configured
 
 *WAF module*- Creates a WAF ACL on CloudFront to enforce common rules.
 
+*CloudFront module*- Creates a CloudFront Distribution for serving traffic to ALB
+
 **to be created:**
 - Pod access configuration to the RDS database
 - Route 53 DNS
-- CloudFront distribution
 - CloudWatch metrics
 - Kinesis
 - Cognito

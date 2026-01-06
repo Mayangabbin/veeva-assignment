@@ -141,7 +141,8 @@ service for frontend and backend.. Horizontal Pod Autoscaler (HPA) is configured
 *CloudFront module*- Creates a CloudFront Distribution for serving traffic to ALB
 
 
-**to be created:**
+**Future steps:**
+- Switch managed IAM policies for least privilege IAM custom policies.
 - Pod access configuration to the RDS database
 - Route 53 DNS
 - CloudWatch metrics

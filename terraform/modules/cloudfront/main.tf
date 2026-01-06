@@ -39,4 +39,6 @@ resource "aws_cloudfront_distribution" "frontend_cf" {
   }
 
   web_acl_id = var.cf_waf_arn
+  
+  tags = var.tags
 }

@@ -38,6 +38,7 @@ module "app" {
   min_replicas          = var.min_replicas
   max_replicas          = var.max_replicas
   cpu_target_precentage = var.cpu_target_precentage 
+  ingress_name = var.ingress_name
 }
 
 ### RDS MODULE ###
@@ -58,3 +59,13 @@ module "rds" {
 module "rds" {
   prefix            = var.prefix
 }
+
+### CLOUDFRONT MODULE ###
+#
+module "cloudfront" {
+  source      = "./modules/cloudfront"
+  cf_waf_arn  = module.waf.cf_waf_arn
+  ingress_name = var.ingress_name
+}
+
+

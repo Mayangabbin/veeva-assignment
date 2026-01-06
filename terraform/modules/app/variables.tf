@@ -25,3 +25,9 @@ variable "cpu_target_percentage" {
   default = 70
 }
 
+variable "ingress_name" {
+  type = string
+  default = "frontend-ingress"
+}
+
+

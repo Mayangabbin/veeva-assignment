@@ -117,7 +117,10 @@ Integrate Kinesis with AWS Lambda or AWS Analytics services to enable real-time 
 
 ### Coding:
 In this repo, under the terraform directory, I have written Infrastructure as Code for this architecture.
+
 This IaC is partial and not fully completed, but it demonstrates the technical skills I have.
+
+It is recommended to apply the bootstrap script first to automate backend environment before deploying the infrastructure. This script creates required S3 bucket and creates a DynamoDB lock table.
 
 The Terraform code is organized into modules:
 
@@ -136,6 +139,7 @@ service for frontend and backend.. Horizontal Pod Autoscaler (HPA) is configured
 *WAF module*- Creates a WAF ACL on CloudFront to enforce common rules.
 
 *CloudFront module*- Creates a CloudFront Distribution for serving traffic to ALB
+
 
 **to be created:**
 - Pod access configuration to the RDS database

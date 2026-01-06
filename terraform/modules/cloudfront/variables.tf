@@ -6,3 +6,6 @@ variable "ingress_name" {
   type        = string
   default     = ""
 }
+variable "cluster_name" {
+  type        = string
+}

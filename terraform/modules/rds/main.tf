@@ -1,7 +1,7 @@
 # Security group for RDS 
 resource "aws_security_group" "rds_sg" {
   name        = "rds_sg"
-  description = "Allow access to RDS only from EKS"
+  description = "Allow access to RDS from EKS"
   vpc_id      = var.vpc_id
 
   ingress {

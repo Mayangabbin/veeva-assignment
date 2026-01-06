@@ -2,7 +2,7 @@ variable "cf_waf_arn" {
   type        = string
   default     = ""
 }
-variable "prefix" {
+variable "ingress_name" {
   type        = string
   default     = ""
 }

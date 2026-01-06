@@ -112,3 +112,30 @@ Create centralized dashboards in CloudWatch for system overview.
 Add cache layer for api responses (Redis).
 
 Integrate Kinesis with AWS Lambda or AWS Analytics services to enable real-time analytics dashboards.
+
+### Coding:
+In this repo, under the terraform directory, I have written Infrastructure as Code for this architecture.
+This IaC is partial and not fully completed, but it demonstrates the technical skills I have.
+
+The Terraform code is organized into modules:
+*Networking module*- Creates a VPC and, for each of the two availability zones, creates:
+Public subnet
+Private subnet for the node group
+Private subnet for the database
+
+*EKS module*- Creates an EKS cluster and node group, and installs the ALB Controller.
+
+*App module*- Creates three deployments: frontend, backend, and data-stream, with a service for each deployment. Horizontal Pod Autoscaler (HPA) is configured with a CPU threshold of 70%. Deployments are spread evenly across availability zones. An ALB Ingress is created for the frontend deployment.
+*RDS module*- cCreates a multi-AZ RDS database with ingress allowed from the node group’s security group. The database materuser's password is managed and stored in AWS Secrets Manager. Pod access is handled through IAM roles.
+
+*WAF module*- Creates a WAF ACL on CloudFront to enforce common rules.
+
+to be created:
+Pod access configuration to the RDS database
+Route 53 DNS
+CloudFront distribution
+CloudWatch metrics
+Kinesis
+Cognito
+API Gateway
+

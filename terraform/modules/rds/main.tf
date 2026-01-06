@@ -19,9 +19,12 @@ resource "aws_security_group" "rds_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "rds_sg"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Name = "rds_sg"
+    }
+  )
 }
 
 # RDS subnet group
@@ -29,6 +32,12 @@ resource "aws_db_subnet_group" "this" {
   name       = "${var.db_name}-subnet-group"
   subnet_ids = var.subnet_ids
   description = "Subnet group for RDS ${var.db_name}"
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.db_name}-subnet-group"
+    }
+  )
 }
 
 # RDS instance
@@ -48,10 +57,13 @@ resource "aws_db_instance" "this" {
   publicly_accessible         = false
   skip_final_snapshot         = true
   deletion_protection         = false
-
-  tags = {
-    Name = var.db_name
-  }
+  
+  tags = merge(
+    var.tags,
+    {
+      Name = var.db_name
+    }
+  )
 }
 
 

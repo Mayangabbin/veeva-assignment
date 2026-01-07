@@ -8,7 +8,7 @@ locals {
 ### NETWORKING MODULE ###
 # Creates VPC, 2 Public subnets, 4 Private subnets.
 module "networking" {
-  source = "./modules/networking"
+  source              = "../../modules/networking"
   cidr_block          = var.vpc_cidr
   prefix              = var.prefix
   cluster_name        = local.cluster_name
@@ -21,7 +21,7 @@ module "networking" {
 ### EKS MODULE ###
 # Creates EKS cluster with ALB controller
 module "eks" {
-  source = "./modules/eks"
+  source                 = "../../modules/eks"
   vpc_id                 = module.networking.vpc_id
   public_subnet_ids      = module.networking.public_subnet_ids
   private_app_subnet_ids = module.networking.private_app_subnet_ids
@@ -38,7 +38,7 @@ module "eks" {
 ### APP MODULE ###
 # Creates 3 deployments with services and ALB ingress for frontend
 module "app" {
-  source                = "./modules/app"
+  source                = "../../modules/app"
   namespace             = var.namespace
   apps                  = var.apps
   min_replicas          = var.min_replicas
@@ -51,7 +51,7 @@ module "app" {
 # Creates multi AZ rds instance with SG allowing ingress
 # from EKS nodes
 module "rds" {
-  source            = "./modules/rds"
+  source            = "../../modules/rds"
   vpc_id            = module.networking.vpc_id
   db_name           = "${var.prefix}-${var.environment}-db"
   db_username       = var.db_username
@@ -67,15 +67,15 @@ module "rds" {
 ### WAF MODULE ###
 # Creates WAF ACL for CloudFront
 module "waf" {
-  source = "./modules/waf"
+  source = "../../modules/waf"
   prefix = var.prefix
-  tags = local.tags
+  tags   = local.tags
 }
 
 ### CLOUDFRONT MODULE ###
 # Creates a CloudFront Distribution for serving traffic to ALB
 module "cloudfront" {
-  source       = "./modules/cloudfront"
+  source       = "../../modules/cloudfront"
   cf_waf_arn   = module.waf.cf_waf_arn
   ingress_name = var.ingress_name
   tags = local.tags

@@ -141,6 +141,7 @@ service for frontend and backend.. Horizontal Pod Autoscaler (HPA) is configured
 
 **Future steps:**
 - Switch managed IAM policies for least privilege IAM custom policies.
+- Consider migratimg to Terragrunt for easier and more efficient environment managing.
 - Pod access configuration to the RDS database
 - Route 53 DNS
 - CloudWatch metrics

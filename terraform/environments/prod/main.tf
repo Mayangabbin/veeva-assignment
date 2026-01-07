@@ -22,8 +22,8 @@ module "networking" {
 module "eks" {
   source = "./modules/eks"
   vpc_id                 = module.networking.vpc_id
-  public_subnet_ids      = [for az, cidr in module.networking.public_subnets : cidr]
-  private_app_subnet_ids = [for az, cidr in module.networking.private_app_subnets : cidr]
+  public_subnet_ids      = module.networking.public_subnet_ids
+  private_app_subnet_ids = module.networking.private_app_subnet_ids
   cluster_name           = local.cluster_name
   prefix                 = var.prefix
   environment            = var.environment
@@ -57,20 +57,20 @@ module "rds" {
   engine            = var.db_engine
   allocated_storage = db_allocated_storage
   node_sg_ids       = [module.eks.eks_node_group_sg_id]
-  subnet_ids        = [for az, cidr in module.networking.private_app_subnets : cidr]
+  subnet_ids        = module.networking.private_db_subnet_ids
 }
 
 ### WAF MODULE ###
 # Creates WAF ACL for CloudFront
 module "rds" {
-  prefix            = var.prefix
+  prefix = var.prefix
 }
 
 ### CLOUDFRONT MODULE ###
 # Creates a CloudFront Distribution for serving traffic to ALB
 module "cloudfront" {
-  source      = "./modules/cloudfront"
-  cf_waf_arn  = module.waf.cf_waf_arn
+  source       = "./modules/cloudfront"
+  cf_waf_arn   = module.waf.cf_waf_arn
   ingress_name = var.ingress_name
   tags = var.tags
 }

@@ -12,9 +12,7 @@ module "networking" {
   cidr_block          = var.vpc_cidr
   prefix              = var.prefix
   cluster_name        = local.cluster_name
-  public_subnets      = var.public_subnets
-  private_app_subnets = var.private_app_subnets
-  private_db_subnets  = var.private_db_subnets
+  availability_zones_config = var.availability_zones_config
   tags = local.tags
 }
 

@@ -55,14 +55,15 @@ module "rds" {
   db_username       = var.db_username
   db_instance_class = var.db_instance_class
   engine            = var.db_engine
-  allocated_storage = db_allocated_storage
+  allocated_storage = var.db_allocated_storage
   node_sg_ids       = [module.eks.eks_node_group_sg_id]
   subnet_ids        = module.networking.private_db_subnet_ids
 }
 
 ### WAF MODULE ###
 # Creates WAF ACL for CloudFront
-module "rds" {
+module "waf" {
+  source = "./modules/waf"
   prefix = var.prefix
 }
 

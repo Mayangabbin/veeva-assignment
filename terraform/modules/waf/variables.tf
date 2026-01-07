@@ -5,3 +5,7 @@ variable "prefix" {
 variable "enironment"{
   type = string
 }
+variable "tags" {
+  type    = map(string)
+  default = {}
+}

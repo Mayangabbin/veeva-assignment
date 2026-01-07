@@ -149,7 +149,7 @@ service for frontend and backend.. Horizontal Pod Autoscaler (HPA) is configured
 - Cognito
 - API Gateway
 
-### Cost Optimiation Strategies:
+### Cost Optimization Strategies:
 
 **Spot Instances for Data Processing:** Real-time data processing pods run on a dedicated Spot Instance Node Group. Even if AWS reclaims an instance, Kubernetes will simply reschedule the pod on another node. (since the data stream is buffered in Amazon Kinesis, any instance interruption handled by EKS results in zero data loss)
 

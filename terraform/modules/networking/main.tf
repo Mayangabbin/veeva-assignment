@@ -23,10 +23,10 @@ resource "aws_internet_gateway" "main" {
 
 # Public subnets
 resource "aws_subnet" "public" {
-  for_each = var.public_subnets
+for_each = var.availability_zones_config
 
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = each.value
+  cidr_block              = each.value.public_cidr
   availability_zone       = each.key
   map_public_ip_on_launch = true
 
@@ -95,10 +95,10 @@ resource "aws_nat_gateway" "nat" {
 
 # Private app subnets
 resource "aws_subnet" "private_app" {
-  for_each = var.private_app_subnets
+for_each = var.availability_zones_config
 
   vpc_id            = aws_vpc.main.id
-  cidr_block        = each.value
+  cidr_block        = each.value.private_app_cidr
   availability_zone = each.key
 
   tags = merge(
@@ -145,9 +145,10 @@ resource "aws_route_table_association" "private_app" {
 # Private DB subnets
 resource "aws_subnet" "private_db" {
   for_each = var.private_db_subnets
+for_each = var.availability_zones_config
 
   vpc_id            = aws_vpc.main.id
-  cidr_block        = each.value
+  cidr_block        = each.value.private_db_cidr
   availability_zone = each.key
 
   tags = merge(

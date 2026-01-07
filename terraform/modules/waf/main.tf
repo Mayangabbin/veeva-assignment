@@ -32,4 +32,10 @@ resource "aws_wafv2_web_acl" "cf" {
       sampled_requests_enabled   = true
     }
   }
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.prefix}-${var.environment}-cf-waf"
+    }
+  )
 }

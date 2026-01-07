@@ -3,11 +3,6 @@ variable "region" {
   type    = string
 }
 
-# Availability Zones
-variable "azs" {
-  type    = list(string)
-}
-
 # Prefix for naming
 variable "prefix" {
   type    = string
@@ -25,16 +20,13 @@ variable "vpc_cidr" {
 }
 
 # Subnet CIDRs per AZ
-variable "public_subnets" {
-  type = map(string)
-}
-
-variable "private_app_subnets" {
-  type = map(string)
-}
-
-variable "private_db_subnets" {
-  type = map(string)
+variable "availability_zones_config" {
+  description = "Map of AZs to CIDR blocks"
+  type = map(object({
+    public_cidr      = string
+    private_app_cidr = string
+    private_db_cidr  = string
+  }))
 }
 
 # Apps to deploy

@@ -15,6 +15,7 @@ module "networking" {
   public_subnets      = var.public_subnets
   private_app_subnets = var.private_app_subnets
   private_db_subnets  = var.private_db_subnets
+  tags = local.tags
 }
 
 ### EKS MODULE ###
@@ -31,6 +32,7 @@ module "eks" {
   node_desired_size      = var.node_desired_size
   node_min_size          = var.node_min_size
   node_max_size          = var.node_max_size
+  tags = local.tags
 }
 
 ### APP MODULE ###
@@ -58,6 +60,8 @@ module "rds" {
   allocated_storage = var.db_allocated_storage
   node_sg_ids       = [module.eks.eks_node_group_sg_id]
   subnet_ids        = module.networking.private_db_subnet_ids
+  tags = local.tags
+
 }
 
 ### WAF MODULE ###
@@ -65,6 +69,7 @@ module "rds" {
 module "waf" {
   source = "./modules/waf"
   prefix = var.prefix
+  tags = local.tags
 }
 
 ### CLOUDFRONT MODULE ###
@@ -73,7 +78,7 @@ module "cloudfront" {
   source       = "./modules/cloudfront"
   cf_waf_arn   = module.waf.cf_waf_arn
   ingress_name = var.ingress_name
-  tags = var.tags
+  tags = local.tags
 }
 
 

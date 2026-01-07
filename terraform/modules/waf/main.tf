@@ -1,5 +1,6 @@
+# WAF ACL inforces common rules
 resource "aws_wafv2_web_acl" "cf" {
-  name  = "${var.prefix}-cf-waf"
+  name  = "${var.prefix}-${var.environment}-cf-waf"
   scope = "CLOUDFRONT"
 
   default_action {
